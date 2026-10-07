@@ -1,61 +1,44 @@
-# Weather components, pinned clocks
+# Test a MapsGL layer toggle in Storybook
 
-A small component kit built on the Xweather API, documented in Storybook, with
-visual regression running through Chromatic.
+Test a temperature toggle against the button state and the Xweather MapsGL
+layer. Remove one SDK call to see the test catch a broken control.
 
-The components are the excuse. The point is what happens when you snapshot a UI
-whose content is tied to the current moment.
+Follow [the walkthrough](docs/testing-mapsgl.md) to run the example and
+reproduce the failure.
 
-## Setup
+## Run locally
 
+Use Node 20 or later.
+
+```sh
+npm ci
+npx playwright install chromium
+cp .env.example .env
 ```
-npm create vite@latest weather-kit -- --template react-ts
-cd weather-kit
-npx storybook@latest init
-npx storybook@latest add @chromatic-com/storybook
-```
 
-Drop the contents of `src/` into the new project, import `styles.css` in
-`.storybook/preview.ts`, then
+Keep an existing `.env`. Set the Xweather credentials and Mapbox token, then start Storybook.
 
-```
+```sh
 npm run storybook
-npx chromatic --project-token=<token>
 ```
 
-## The thing to actually observe
+Open http://localhost:6006/?path=/story/mapsgl-weathermap--toggles-temperature.
+Run the tests from another terminal.
 
-Run Chromatic once. Wait ten minutes. Run it again without touching a line of
-code. Three stories will come back changed.
+```sh
+npm run test:maps
+```
 
-- `CurrentConditions/LiveClock` moves from "Updated 2 minutes ago" to
-  "Updated 12 minutes ago"
-- `AlertBanner` counts down toward expiry
-- `HourlyStrip/LiveClock` shifts its highlighted column one cell right
+The repo contains one map component and two Storybook tests. The first checks
+weather data availability. The second hides and restores the same SDK layer.
+These tests use live services. They check integration behavior and do not
+compare screenshots.
 
-None of that is a regression. It is the clock leaking into the render.
+## CI
 
-The fix is in `src/clock.tsx`. No component calls `new Date()` directly. They
-read the current instant from context, which means a story can pin it. Compare
-the `LiveClock` and `Pinned` stories of either component to see the difference.
-
-`HourlyStrip` is the interesting one. It renders no timestamp at all, so it
-looks immune, and it drifts anyway because "which hour is now" is itself a read
-of the clock.
-
-## Notes for the write up
-
-Things worth checking before you write, because the answers belong in the post
-and none of them are guessable from here.
-
-1. How many runs it took before a false diff appeared, and which story went
-   first
-2. Whether Chromatic's own diff threshold absorbed the small changes and only
-   flagged the larger ones
-3. What the TurboSnap behaviour was, given no source file changed between runs
-4. Whether pinning the clock in a decorator was enough, or whether anything
-   else leaked, timezone being the obvious candidate
-
-The generalisation at the end writes itself once you have the screenshots.
-Relative timestamps show up in almost every dashboard, so this is not a weather
-problem. Weather is just where it is impossible to ignore.
+`npm run build` and `npm run build-storybook` run on pushes and pull requests.
+Live Chromium tests run on main pushes or manual dispatch with repository
+secrets `XWEATHER_CLIENT_ID`, `XWEATHER_CLIENT_SECRET`, and `MAPBOX_ACCESS_TOKEN`.
+The live job fails if you omit a secret. The build includes browser credentials,
+so configure account restrictions before sharing it. CI keeps those builds
+on the runner.

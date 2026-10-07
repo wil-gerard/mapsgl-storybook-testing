@@ -1,0 +1,48 @@
+.weather-map {
+  width: min(800px, calc(100vw - 32px));
+  font-family: system-ui, sans-serif;
+  color: #17243a;
+}
+
+.weather-map-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.weather-map h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.weather-map button {
+  padding: 8px 12px;
+  border: 1px solid #8190a8;
+  border-radius: 6px;
+  background: white;
+  color: inherit;
+  cursor: pointer;
+}
+
+.weather-map button[aria-pressed="true"] {
+  background: #17243a;
+  color: white;
+}
+
+.weather-map button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.weather-map-canvas {
+  position: relative;
+  height: 440px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.weather-map [role="alert"] {
+  color: #a32424;
+}
