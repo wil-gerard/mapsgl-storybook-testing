@@ -13,18 +13,34 @@ and live temperature data over Minneapolis.
 ## Before you start
 
 Clone the [example repository](https://github.com/wil-gerard/mapsgl-storybook-testing).
-You also need three credentials. The stories load live weather data and a
-Mapbox base map, so the tests fail without them.
+The stories load live weather data on a Mapbox base map, so you need an
+Xweather account with MapsGL access and a Mapbox account.
 
-- An Xweather client ID and client secret with MapsGL access. The
-  [MapsGL getting started guide](https://www.xweather.com/docs/mapsgl/getting-started)
-  covers signing up and creating access keys.
-- A Mapbox access token. See
-  [Mapbox access tokens](https://docs.mapbox.com/help/getting-started/access-tokens/).
+**Xweather.** Create an app in your Xweather account to get a client ID and
+client secret. The
+[MapsGL getting started guide](https://www.xweather.com/docs/mapsgl/getting-started)
+covers signing up and creating access keys. Each app has a namespace that
+limits which domains can use its keys. If the map fails to load, check that
+the namespace allows the host where Storybook runs, such as `localhost`.
 
-Add them to `.env` as described in [the local setup](../README.md#run-locally).
-Vite embeds these values in the browser build, so use credentials meant for
-client-side use and keep `.env` out of version control.
+**Mapbox.** Your account's default public token works. It starts with `pk.`
+and appears on your [access tokens page](https://console.mapbox.com/account/access-tokens/).
+Do not use a secret token that starts with `sk.`, because Mapbox GL JS rejects
+it. See [Mapbox access tokens](https://docs.mapbox.com/help/getting-started/access-tokens/)
+for more about tokens.
+
+Add the three values to `.env`.
+
+```sh
+XWEATHER_CLIENT_ID=your_client_id
+XWEATHER_CLIENT_SECRET=your_client_secret
+MAPBOX_ACCESS_TOKEN=pk.your_token
+```
+
+Vite embeds these values in the browser build, so keep `.env` out of version
+control and do not publish the build. To look at the stories without
+credentials, open the
+[published Storybook](https://wil-gerard.github.io/mapsgl-storybook-testing/).
 
 ## Establish readiness before clicking
 
