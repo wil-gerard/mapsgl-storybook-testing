@@ -4,7 +4,8 @@ Test a temperature toggle against the button state and the Xweather MapsGL
 layer. Remove one SDK call to see the test catch a broken control.
 
 Follow [the walkthrough](docs/testing-mapsgl.md) to run the example and
-reproduce the failure.
+reproduce the failure, or open the
+[published Storybook](https://wil-gerard.github.io/mapsgl-storybook-testing/).
 
 ## Run locally
 
