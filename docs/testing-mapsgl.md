@@ -10,6 +10,22 @@ visibility call to confirm that your test catches the broken control.
 You can run the example in Storybook with MapsGL 1.10.2, Mapbox GL JS 3.32.0,
 and live temperature data over Minneapolis.
 
+## Before you start
+
+Clone the [example repository](https://github.com/wil-gerard/mapsgl-storybook-testing).
+You also need three credentials. The stories load live weather data and a
+Mapbox base map, so the tests fail without them.
+
+- An Xweather client ID and client secret with MapsGL access. The
+  [MapsGL getting started guide](https://www.xweather.com/docs/mapsgl/getting-started)
+  covers signing up and creating access keys.
+- A Mapbox access token. See
+  [Mapbox access tokens](https://docs.mapbox.com/help/getting-started/access-tokens/).
+
+Add them to `.env` as described in [the local setup](../README.md#run-locally).
+Vite embeds these values in the browser build, so use credentials meant for
+client-side use and keep `.env` out of version control.
+
 ## Establish readiness before clicking
 
 A controller can initialize before weather data is available. `WeatherMap.tsx`
