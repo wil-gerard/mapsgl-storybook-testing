@@ -20,10 +20,11 @@ export function WeatherMap({ onReady }: WeatherMapProps) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
+    const proxyUrl = import.meta.env.XWEATHER_PROXY_URL;
     const clientId = import.meta.env.XWEATHER_CLIENT_ID;
     const clientSecret = import.meta.env.XWEATHER_CLIENT_SECRET;
     const accessToken = import.meta.env.MAPBOX_ACCESS_TOKEN;
-    if (!container.current || !clientId || !clientSecret || !accessToken) {
+    if (!container.current || !accessToken || (!proxyUrl && (!clientId || !clientSecret))) {
       setStatus("error");
       return;
     }
@@ -56,7 +57,11 @@ export function WeatherMap({ onReady }: WeatherMapProps) {
       });
       map.on("error", fail);
       instance = new MapboxMapController(map, {
-        account: new Account(clientId, clientSecret),
+        // A published build points MapsGL at a proxy that holds the real
+        // credentials, so the placeholders here never reach Xweather.
+        account: proxyUrl
+          ? new Account("proxy", "proxy", { mapsgl: proxyUrl } as ConstructorParameters<typeof Account>[2])
+          : new Account(clientId, clientSecret),
         units: { temperature: "F" },
       });
       controller.current = instance;
